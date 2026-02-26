@@ -3,7 +3,6 @@ package com.example.cs3318_finalproject
 import android.os.Bundle // for saving/restoring state
 import androidx.activity.ComponentActivity // base activity class for compose apps
 import androidx.activity.compose.setContent // so you can set a Composable UI directly
-
 import androidx.compose.foundation.Canvas // for drawing graph
 import androidx.compose.ui.geometry.Offset // stores 2D points
 import androidx.compose.foundation.layout.*
@@ -13,20 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.objecthunter.exp4j.ExpressionBuilder
-
 // for additional graphing calculator function
 import androidx.compose.foundation.gestures.detectTransformGestures // for pinch/zoom
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-
 // math imports
 import kotlin.math.floor
 import kotlin.math.*
-
 // allows for more colors in my theme
 import androidx.compose.material3.MaterialTheme
-
 // For appearance
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

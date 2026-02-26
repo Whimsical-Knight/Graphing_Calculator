@@ -58,6 +58,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // dependencies added
+    // math dependency added for parsing mathematical expressions / strings
     implementation("net.objecthunter:exp4j:0.4.8")
 }
