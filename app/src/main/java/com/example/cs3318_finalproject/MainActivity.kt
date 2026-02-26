@@ -1,54 +1,39 @@
 package com.example.cs3318_finalproject
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Canvas
+import android.os.Bundle // for saving/restoring state
+import androidx.activity.ComponentActivity // base activity class for compose apps
+import androidx.activity.compose.setContent // so you can set a Composable UI directly
+
+import androidx.compose.foundation.Canvas // for drawing graph
+import androidx.compose.ui.geometry.Offset // stores 2D points
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.objecthunter.exp4j.ExpressionBuilder
 
-// for additional graphing calculator function (to enable pinch zoom and auto scaling)
-import androidx.compose.foundation.gestures.detectTransformGestures
+// for additional graphing calculator function
+import androidx.compose.foundation.gestures.detectTransformGestures // for pinch/zoom
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import android.graphics.Paint
 
-// allows me to use clipToBounds so graph doesn't bleed into rest of interface
-import androidx.compose.ui.draw.clipToBounds
-
-// allows for graphing calculator calculations
-import kotlin.math.pow
+// math imports
 import kotlin.math.floor
 import kotlin.math.*
-import kotlin.math.log10
-import kotlin.math.abs
 
-// allows for more colors
+// allows for more colors in my theme
 import androidx.compose.material3.MaterialTheme
 
-// allows for using canvas
-import androidx.compose.foundation.Canvas
-
-// allow for rounding
-import kotlin.math.roundToInt
-
-import androidx.compose.foundation.gestures.detectTransformGestures
+// For appearance
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.runtime.*
 
+// Initialize the UI
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +70,6 @@ fun CalculatorTabsApp() {
 fun GraphCalculator() {
 
     var input by remember { mutableStateOf("y=sin(x)") }
-    var result by remember { mutableStateOf("") }
     var trigger by remember { mutableStateOf(0) }
 
     Column(Modifier.padding(16.dp)) {
@@ -196,8 +180,9 @@ fun FunctionGraph(
     trigger: Int,
     showIntersections: Boolean = true
 ) {
+    // controls zoom
     var scale by remember { mutableStateOf(1f) }
-    // added to allow for up/down and linear navigation (not just pinch/zoom)
+    // added to allow for pan / linear navigation
     var offset by remember { mutableStateOf(Offset.Zero) }
 
     // Generic colors for functions
@@ -244,22 +229,22 @@ fun FunctionGraph(
                     }
                 }
 
-
-
         ) {
             val width = size.width
             val height = size.height
+
             // added to allow for side-to-side and linear navigation (not just pinch/zoom)
             val originX = width / 2 + offset.x
             val originY = height / 2 + offset.y
             val worldScale = (width / 20f) * scale
 
-            // ===== GRIDLINES =====
+            // defines the gridlines
             val minX = -originX / worldScale
             val maxX = (width - originX) / worldScale
             val minY = -(height - originY) / worldScale
             val maxY = originY / worldScale
 
+            // X Tick draws the vertical gridlines per 1 unit
             val step = 1f
             var xTick = floor(minX)
             while (xTick <= maxX) {
@@ -267,7 +252,7 @@ fun FunctionGraph(
                 drawLine(Color.LightGray, Offset(sx, 0f), Offset(sx, height))
                 xTick += step
             }
-
+            // Y Tick draws the horizontal gridlines per 1 unit
             var yTick = floor(minY)
             while (yTick <= maxY) {
                 val sy = originY - yTick * worldScale
@@ -275,17 +260,17 @@ fun FunctionGraph(
                 yTick += step
             }
 
-            // ===== AXES =====
+            // draws the graph axes
             drawLine(Color.DarkGray, Offset(0f, originY), Offset(width, originY), strokeWidth = 3f)
             drawLine(Color.DarkGray, Offset(originX, 0f), Offset(originX, height), strokeWidth = 3f)
 
-            // ===== AXES LABELS =====
+            // labels the graph axes
             val paint = android.graphics.Paint().apply {
                 color = android.graphics.Color.DKGRAY
                 textSize = 28f
                 isAntiAlias = true
             }
-
+            // set ceilings
             xTick = ceil(minX)
             while (xTick <= maxX) {
                 if (xTick != 0f) {
@@ -303,22 +288,24 @@ fun FunctionGraph(
                 }
                 yTick += step
             }
-
+            // labels the origin
             drawIntoCanvas { it.nativeCanvas.drawText("0", originX + 6f, originY + 30f, paint) }
 
-            // ===== DRAW FUNCTIONS =====
+            // draw the actual functions
             val sampledFunctions = mutableListOf<List<Pair<Float, Float>>>()
+            // sets the appearance of each function (i.e,. choosing colors, etc)
             functionTokens.forEachIndexed { index, (lhs, rhs) ->
                 val color = colors[index % colors.size]
                 val points = mutableListOf<Pair<Float, Float>>()
                 var prev: Offset? = null
 
+                // loop for drawing graph, skips invalid points
                 for (i in 0..width.toInt()) {
                     val xWorld = (i - originX) / worldScale
                     val yWorld: Float
                     val screenX: Float
                     val screenY: Float
-
+                    // condition to ignore invalid point
                     try {
                         when (lhs) {
                             "y" -> {
@@ -340,24 +327,21 @@ fun FunctionGraph(
                             else -> continue
                         }
                     } catch (_: Exception) { continue }
-
+                    // connect the points into a function
                     val point = Offset(screenX, screenY)
                     prev?.let { drawLine(color, it, point, strokeWidth = 3f) }
                     prev = point
-
                     points.add(xWorld to yWorld)
                 }
-
                 sampledFunctions.add(points)
             }
-
-            // ===== DRAW USER POINTS =====
+            // draw the labels for the points
             val userPaint = android.graphics.Paint().apply {
                 color = android.graphics.Color.RED
                 textSize = 28f
                 isAntiAlias = true
             }
-
+            // draw the actual points
             userPoints.forEach { (x, y) ->
                 val sx = originX + x * worldScale
                 val sy = originY - y * worldScale
