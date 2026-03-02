@@ -60,4 +60,6 @@ dependencies {
 
     // math dependency added for parsing mathematical expressions / strings
     implementation("net.objecthunter:exp4j:0.4.8")
+    // allow for compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 }
