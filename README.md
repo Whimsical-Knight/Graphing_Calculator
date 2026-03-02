@@ -1,8 +1,8 @@
 **SUMMARY OF CODE:**
 
 Dependencies in my build gradle file:
-•	object hunter: for parsing mathematical expressions, which helps me distinguish points from functions on my graphing calculator
-•	lifecycle view model compose: helps me store my view in real time—things like zoom level, graph points, etc.
+* object hunter: for parsing mathematical expressions, which helps me distinguish points from functions on my graphing calculator
+* lifecycle view model compose: helps me store my view in real time—things like zoom level, graph points, etc.
 
 PROGRAM FILES
 1. MainActivity: call material theme, which sets my colors, typography, shapes, etc. Then surface, which applies my background colors, etc. Then here is where we call our
