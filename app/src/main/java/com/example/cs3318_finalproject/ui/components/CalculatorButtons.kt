@@ -6,33 +6,76 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+// data model for buttons
+data class CalcButton(
+    val display: String,
+    val value: String
+)
 @Composable
 fun CalculatorButtons(
     onPress: (String) -> Unit,
     onClear: () -> Unit,
     onEquals: () -> Unit
 ) {
+//    val rows = listOf(
+//        listOf("7", "8", "9", "/"),
+//        listOf("4", "5", "6", "*"),
+//        listOf("1", "2", "3", "-"),
+//        listOf("0", ".", "+", "^"),
+//        listOf("sin(", "cos(", "tan(", "sqrt("),
+//        listOf("(", ")", "C", "=")
+//    )
     val rows = listOf(
-        listOf("7", "8", "9", "/"),
-        listOf("4", "5", "6", "*"),
-        listOf("1", "2", "3", "-"),
-        listOf("0", ".", "+", "^"),
-        listOf("sin(", "cos(", "tan(", "sqrt("),
-        listOf("(", ")", "C", "=")
+        listOf(
+            CalcButton("7", "7"),
+            CalcButton("8", "8"),
+            CalcButton("9", "9"),
+            CalcButton("÷", "/")
+        ),
+        listOf(
+            CalcButton("4", "4"),
+            CalcButton("5", "5"),
+            CalcButton("6", "6"),
+            CalcButton("×", "*")
+        ),
+        listOf(
+            CalcButton("1", "1"),
+            CalcButton("2", "2"),
+            CalcButton("3", "3"),
+            CalcButton("−", "-")
+        ),
+        listOf(
+            CalcButton("0", "0"),
+            CalcButton(".", "."),
+            CalcButton("+", "+"),
+            CalcButton("xʸ", "^")
+        ),
+        listOf(
+            CalcButton("sin", "sin("),
+            CalcButton("cos", "cos("),
+            CalcButton("tan", "tan("),
+            CalcButton("√", "sqrt(")
+        ),
+        listOf(
+            CalcButton("(", "("),
+            CalcButton(")", ")"),
+            CalcButton("C", "C"),
+            CalcButton("=", "=")
+        )
     )
 
     // stack the rows vertically
     Column {
         rows.forEach { row ->
             Row {
-                row.forEach { label ->
+                row.forEach { button ->
                     // button click logic
                     Button(
                         onClick = {
-                            when (label) {
+                            when (button.value) {
                                 "C" -> onClear()
                                 "=" -> onEquals()
-                                else -> onPress(label)
+                                else -> onPress(button.value)
                             }
                         },
                         // make all buttons equally sized within row
@@ -40,7 +83,7 @@ fun CalculatorButtons(
                             .weight(1f)
                             .padding(4.dp)
                     ) {
-                        Text(label)
+                        Text(button.display)
                     }
                 }
             }
