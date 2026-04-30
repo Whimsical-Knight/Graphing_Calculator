@@ -5,7 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 
 @Composable
-fun CalculatorTabsApp() {
+fun  CalculatorTabsApp() {
     // track which tab is selected
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Graphing", "Scientific") // tab labels

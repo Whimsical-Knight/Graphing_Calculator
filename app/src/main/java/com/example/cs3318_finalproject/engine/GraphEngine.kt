@@ -41,7 +41,7 @@ class GraphEngine {
                 // trim functions and distinguish lhs from rhs
                 functionRegex.matches(part) -> {
                     val (lhs, rhs) = part.split("=")
-                        .map { it.trim() }
+                        .map { it.trim().lowercase() }
                     functionTokens.add(lhs to rhs)
                 }
             }
@@ -49,19 +49,30 @@ class GraphEngine {
         return functionTokens to userPoints
     }
 
-    // evaluates my functions
-    // start with Y-evaluation and see if it fails
-    fun evaluateY(rhs: String, x: Double): Double? {
+    fun evaluate(rhs: String, variable: String, value: Double): Double? {
         return try {
             ExpressionBuilder(rhs)
-                .variable("x")
+                .variable(variable)
                 .build()
-                .setVariable("x", x)
+                .setVariable(variable, value)
                 .evaluate()
-        // catch for if graphing calculation fails
-        // move to next expression if it does
         } catch (e: Exception) {
             null
         }
     }
 }
+
+// evaluates my functions
+// start with Y-evaluation and see if it fails
+//    fun evaluateY(rhs: String, x: Double): Double? {
+//        return try {
+//            ExpressionBuilder(rhs)
+//                .variable("x")
+//                .build()
+//                .setVariable("x", x)
+//                .evaluate()
+//        // catch for if graphing calculation fails
+//        // move to next expression if it does
+//        } catch (e: Exception) {
+//            null
+//        }

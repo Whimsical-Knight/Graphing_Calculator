@@ -1,3 +1,8 @@
+TO ADD:
+refine input function
+add x=y functionality (inverse func)
+generates a meme with each computation?
+
 **SUMMARY OF CODE:**
 
 Dependencies in my build gradle file:

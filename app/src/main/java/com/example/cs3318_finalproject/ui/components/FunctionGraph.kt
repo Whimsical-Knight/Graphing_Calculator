@@ -136,28 +136,32 @@ fun FunctionGraph(
                     val screenX: Float
                     val screenY: Float
                     try {
-                        // for y, set our independent variable to x
                         when (lhs) {
+                            // for y, set our independent variable to x
                             "y" -> {
-                                val yVal = graphEngine.evaluateY(rhs, xWorld.toDouble()) ?: continue
+                                val yVal = graphEngine.evaluate(rhs, "x", xWorld.toDouble()) ?: continue
                                 yWorld = yVal.toFloat()
                                 if (!yWorld.isFinite()) continue
+
                                 screenX = i.toFloat()
                                 screenY = originY - yWorld * worldScale
                             }
-                        // for x, set our independent variable to y
+                            // for x, set our independent variable to y
                             "x" -> {
                                 val yVal = xWorld
-                                val xVal = graphEngine.evaluateY(rhs, yVal.toDouble()) ?: continue
+                                val xVal = graphEngine.evaluate(rhs, "y", yVal.toDouble()) ?: continue
                                 if (!xVal.isFinite()) continue
-                                screenX = originX + (xVal.toFloat() * worldScale)  // convert Double -> Float
+
+                                screenX = originX + xVal.toFloat() * worldScale
                                 screenY = originY - yVal * worldScale
                                 yWorld = yVal
                             }
                             else -> continue
-                        } // exception in case a point fails
-                    } catch (_: Exception) { continue }
-
+                        }
+                    // exception in case a point evaluation fails (keep going)
+                    } catch (_: Exception) {
+                        continue
+                    }
                     // draw a line to connect all the points
                     val point = Offset(screenX, screenY)
                     prev?.let { drawLine(color, it, point, strokeWidth = 3f) }
