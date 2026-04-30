@@ -1,6 +1,7 @@
 package com.example.cs3318_finalproject.ui.screens
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
@@ -9,19 +10,18 @@ import com.example.cs3318_finalproject.ui.components.FunctionGraph
 
 @Composable
 fun GraphCalculator() {
-    // set default
-    var input by remember { mutableStateOf("y=sin(x)") }
-    // spacing for vertical elements
-    Column(Modifier.padding(16.dp)) { // define header, set theme
+    // NOTE: PERSISTANT STORAGE ACCROSS ROTATION
+    var input by rememberSaveable { mutableStateOf("y=sin(x)") }
+    Column(Modifier.padding(16.dp)) {
         Text("Graphing Calculator", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(12.dp)) // vertical spacing
+        Spacer(Modifier.height(12.dp))
         OutlinedTextField(
             value = input,
-            onValueChange = { input = it }, // set text to state variable
-            label = { Text("Function") }, // hint for text field
-            modifier = Modifier.fillMaxWidth() // allow text field to expand to match screen width
+            onValueChange = { input = it },
+            label = { Text("Function") },
+            modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(24.dp)) // vertical gap between input field and graph
+        Spacer(Modifier.height(24.dp))
         FunctionGraph(input)
     }
 }

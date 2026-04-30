@@ -61,18 +61,3 @@ class GraphEngine {
         }
     }
 }
-
-// evaluates my functions
-// start with Y-evaluation and see if it fails
-//    fun evaluateY(rhs: String, x: Double): Double? {
-//        return try {
-//            ExpressionBuilder(rhs)
-//                .variable("x")
-//                .build()
-//                .setVariable("x", x)
-//                .evaluate()
-//        // catch for if graphing calculation fails
-//        // move to next expression if it does
-//        } catch (e: Exception) {
-//            null
-//        }
